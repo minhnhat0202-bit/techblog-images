@@ -1,0 +1,65 @@
+<!doctype html>
+<!--
+  Template THUMBNAIL Tech Blog Viettel Cloud · canvas 1500×1000 (3:2)
+  Render:  python3 scripts/render.py thumbnail.html --preset thumb --out techblog-<slug>-thumb.png --webp
+  Sửa phần đánh dấu  EDIT  . Vùng an toàn (chủ thể phải nằm trong): x 250–1250, y 120–880 (bật --safe khi render để xem).
+  Biến thể bố cục (đổi class trên <body>): icon-center (mặc định) · icon-keyword (icon + chữ ngắn bên phải) · icon-arc (icon trong cung tròn mảnh)
+-->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>thumbnail</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --ink:#44494D; --ink-soft:#B5B4B4; --hair:#DADBDD; --soft:#F2F2F2; --red:#EE0033;
+    --stroke:5.2;               /* độ dày nét trong đơn vị viewBox 200; ×(art-size/200) = px canvas → 5.2 × 3 ≈ 15.6px */
+    --art-size:600px;           /* EDIT: cạnh hộp icon; icon chiếm ~70% hộp → chủ thể ≈ 42–50% chiều cao canvas */
+    --kw-size:170px;            /* EDIT: cỡ chữ keyword (biến thể icon-keyword) */
+  }
+  html,body{margin:0;padding:0;width:1500px;height:1000px;overflow:hidden;background:var(--bg);
+    font-family:"FS PF BeauSans Pro",Roboto,Arial,sans-serif;color:var(--ink);}
+  .stage{position:relative;width:1500px;height:1000px;display:flex;align-items:center;justify-content:center;gap:72px;}
+  .art{width:var(--art-size);height:var(--art-size);color:var(--ink);flex:none;display:flex;align-items:center;justify-content:center;}
+  .art svg{width:100%;height:100%;overflow:visible;stroke-width:var(--stroke);}  /* ghi đè stroke-width="7" của file icon */
+  .art .acc{stroke:var(--red)}
+  .art .acc.fill{fill:var(--red);stroke:none}
+  .art .soft{stroke:var(--ink-soft)}
+  .art .kw{font-family:inherit;font-weight:700;font-size:30px;fill:var(--ink);text-anchor:middle;dominant-baseline:middle;letter-spacing:-0.01em;stroke:none}
+  .keyword{display:none;font-weight:700;font-size:var(--kw-size);letter-spacing:-0.02em;line-height:1;color:var(--ink);}
+  .keyword b{color:var(--red);font-weight:inherit}
+  body.icon-keyword .keyword{display:block}
+  body.icon-keyword .stage{gap:64px}
+  body.icon-keyword .art{--art-size:520px}
+  .arc{display:none;position:absolute;left:50%;top:50%;width:780px;height:780px;margin:-390px 0 0 -390px;}
+  body.icon-arc .arc{display:block}
+  body.icon-arc .art{--art-size:520px}
+  /* overlay vùng an toàn — chỉ hiện khi render --safe */
+  .safe{display:none;position:absolute;left:250px;top:120px;width:1000px;height:760px;outline:3px dashed rgba(238,0,51,.6);pointer-events:none}
+  body.show-safe .safe{display:block}
+</style>
+</head>
+<body class="icon-keyword">  <!-- EDIT: icon-center | icon-keyword | icon-arc -->
+<div class="stage">
+
+  <!-- cung tròn mảnh (biến thể icon-arc): hở ở góc dưới phải, như thumbnail GPU trên trang -->
+  <svg class="arc" viewBox="0 0 700 700" fill="none">
+    <circle cx="350" cy="350" r="330" stroke="#DADBDD" stroke-width="9" stroke-linecap="round"
+            stroke-dasharray="1760 2074" transform="rotate(-200 350 350)"/>
+  </svg>
+
+  <div class="art">
+<svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+  <path d="M100 30l26 15v30l-26 15-26-15V45z" class="acc"/>
+  <path d="M55 62l26 15v30L55 122 29 107V77zM145 62l26 15v30l-26 15-26-15V77z"/>
+  <path d="M100 100l26 15v30l-26 15-26-15v-30z"/>
+</svg>
+
+  </div>
+
+  <!-- biến thể icon-keyword: chữ ngắn ≤ 4 ký tự, có thể tô đỏ một ký tự bằng <b> -->
+  <div class="keyword">K8s</div>
+
+  <div class="safe"></div>
+</div>
+</body>
+</html>

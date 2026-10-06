@@ -1,0 +1,102 @@
+<!doctype html>
+<!--
+  Template THUMBNAIL Tech Blog Viettel Cloud · canvas 1500×1000 (3:2)
+  Render:  python3 scripts/render.py thumbnail.html --preset thumb --out techblog-<slug>-thumb.png --webp
+  Sửa phần đánh dấu  EDIT  . Vùng an toàn (chủ thể phải nằm trong): x 250–1250, y 120–880 (bật --safe khi render để xem).
+  Biến thể bố cục (đổi class trên <body>): icon-center (mặc định) · icon-keyword (icon + chữ ngắn bên phải) · icon-arc (icon trong cung tròn mảnh)
+-->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>thumbnail</title>
+<style>
+  :root{
+    --bg:#FFFFFF; --ink:#44494D; --ink-soft:#B5B4B4; --hair:#DADBDD; --soft:#F2F2F2; --red:#EE0033;
+    --stroke:5.2;               /* độ dày nét trong đơn vị viewBox 200; ×(art-size/200) = px canvas → 5.2 × 3 ≈ 15.6px */
+    --art-size:600px;           /* EDIT: cạnh hộp icon; icon chiếm ~70% hộp → chủ thể ≈ 42–50% chiều cao canvas */
+    --kw-size:170px;            /* EDIT: cỡ chữ keyword (biến thể icon-keyword) */
+  }
+  html,body{margin:0;padding:0;width:1500px;height:1000px;overflow:hidden;background:var(--bg);
+    font-family:"FS PF BeauSans Pro",Roboto,Arial,sans-serif;color:var(--ink);}
+  .stage{position:relative;width:1500px;height:1000px;display:flex;align-items:center;justify-content:center;gap:72px;}
+  .art{position:relative;z-index:2;width:var(--art-size);height:var(--art-size);color:var(--ink);flex:none;display:flex;align-items:center;justify-content:center;}
+  .art svg{width:100%;height:100%;overflow:visible;stroke-width:var(--stroke);}  /* ghi đè stroke-width="7" của file icon */
+  .art .acc{stroke:var(--red)}
+  .art .acc.fill{fill:var(--red);stroke:none}
+  .art .soft{stroke:var(--ink-soft)}
+  .art .kw{font-family:inherit;font-weight:700;font-size:30px;fill:var(--ink);text-anchor:middle;dominant-baseline:middle;letter-spacing:-0.01em;stroke:none}
+  .keyword{display:none;position:relative;z-index:2;font-weight:700;font-size:var(--kw-size);letter-spacing:-0.02em;line-height:1;color:var(--ink);}
+  .keyword b{color:var(--red);font-weight:inherit}
+  body.icon-keyword .keyword{display:block}
+  body.icon-keyword .stage{gap:64px}
+  body.icon-keyword .art{--art-size:520px}
+  .arc{display:none;z-index:1;position:absolute;left:50%;top:50%;width:780px;height:780px;margin:-390px 0 0 -390px;}
+  body.icon-arc .arc{display:block}
+  body.icon-arc .art{--art-size:520px}
+  /* ---- Lớp nền công nghệ mờ (đổi class trên <body>): bg-circuit (mặc định) · bg-dots · bg-grid · bg-hex · bg-none ----
+     Chỉ xám nhạt trong bảng màu, độ tương phản thấp, mờ dần về tâm để chủ thể luôn sạch. */
+  .bg{position:absolute;inset:0;z-index:0;pointer-events:none}
+  .bg::before{content:"";position:absolute;inset:0;background:radial-gradient(ellipse 70% 75% at 50% 50%,#FFFFFF 0%,#FFFFFF 38%,#F4F4F5 100%)}
+  .bg::after{content:"";position:absolute;inset:0;
+    -webkit-mask-image:radial-gradient(ellipse 60% 65% at 50% 50%,transparent 0%,transparent 28%,#000 75%);
+            mask-image:radial-gradient(ellipse 60% 65% at 50% 50%,transparent 0%,transparent 28%,#000 75%)}
+  body.bg-none .bg{display:none}
+  body.bg-dots .bg::after{background-image:radial-gradient(circle,#CFD0D2 3.2px,transparent 3.8px);background-size:46px 46px;background-position:23px 23px}
+  body.bg-grid .bg::after{background-image:linear-gradient(#E3E4E6 2px,transparent 2px),linear-gradient(90deg,#E3E4E6 2px,transparent 2px);background-size:60px 60px;background-position:30px 30px}
+  body.bg-hex .bg::after{background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='112' height='194' viewBox='0 0 112 194'><g fill='none' stroke='%23E1E2E4' stroke-width='2.5'><path d='M56 2l48 28v56L56 114 8 86V30z'/><path d='M56 114l48 28v56M56 114L8 142v56M104 86l8 4M8 86l-8 4'/></g></svg>");background-size:112px 194px}
+  body.bg-circuit .bg::after{display:none}
+  .circuit{display:none;position:absolute;z-index:0;inset:0;width:1500px;height:1000px}
+  body.bg-circuit .circuit{display:block}
+  /* overlay vùng an toàn — chỉ hiện khi render --safe */
+  .safe{display:none;position:absolute;left:250px;top:120px;width:1000px;height:760px;outline:3px dashed rgba(238,0,51,.6);pointer-events:none}
+  body.show-safe .safe{display:block}
+</style>
+</head>
+<body class="icon-center bg-circuit">  <!-- EDIT: bố cục icon-center | icon-keyword | icon-arc  +  nền bg-dots | bg-grid | bg-circuit | bg-hex | bg-none -->
+<div class="stage">
+  <div class="bg"></div>
+  <!-- nền mạch điện (bg-circuit): nét hairline + chấm nối, chỉ ở 4 góc ngoài vùng an toàn -->
+  <svg class="circuit" viewBox="0 0 1500 1000" fill="none" stroke="#DADBDD" stroke-width="3" stroke-linecap="round">
+    <g>
+      <path d="M0 140h150l60 60h130M0 260h90l40-40h110M60 0v120l50 50"/>
+      <path d="M1500 120h-170l-60 60h-120M1500 240h-80l-40 40h-130M1440 0v100l-50 50"/>
+      <path d="M0 860h140l60-60h110M0 760h70l40 40h120M80 1000v-110l40-40"/>
+      <path d="M1500 880h-160l-60-60h-110M1500 780h-90l-40 40h-120M1420 1000v-120l-40-40"/>
+    </g>
+    <g fill="#DADBDD" stroke="none">
+      <circle cx="340" cy="200" r="7"/><circle cx="240" cy="220" r="7"/><circle cx="110" cy="170" r="7"/>
+      <circle cx="1150" cy="180" r="7"/><circle cx="1250" cy="280" r="7"/><circle cx="1390" cy="150" r="7"/>
+      <circle cx="310" cy="800" r="7"/><circle cx="230" cy="800" r="7"/><circle cx="120" cy="850" r="7"/>
+      <circle cx="1170" cy="820" r="7"/><circle cx="1250" cy="820" r="7"/><circle cx="1380" cy="840" r="7"/>
+    </g>
+    <g fill="#EE0033" stroke="none"><circle cx="110" cy="170" r="7"/><circle cx="1380" cy="840" r="7"/></g>
+  </svg>
+
+  <!-- cung tròn mảnh (biến thể icon-arc): hở ở góc dưới phải, như thumbnail GPU trên trang -->
+  <svg class="arc" viewBox="0 0 700 700" fill="none">
+    <circle cx="350" cy="350" r="330" stroke="#DADBDD" stroke-width="9" stroke-linecap="round"
+            stroke-dasharray="1760 2074" transform="rotate(-200 350 350)"/>
+  </svg>
+
+  <div class="art">
+    <!-- EDIT: dán SVG icon từ assets/icons/*.svg (viewBox 0 0 200 200) hoặc tự vẽ cùng hệ. Ví dụ chip: -->
+    <svg viewBox="0 0 200 200" fill="none" stroke="currentColor" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="55" y="55" width="90" height="90" rx="8"/>
+      <rect x="72" y="72" width="56" height="56" rx="4" class="soft"/>
+      <g class="acc">
+        <path d="M80 55V30M100 55V30M120 55V30"/>
+        <path d="M80 145v25M100 145v25M120 145v25"/>
+        <path d="M55 80H30M55 100H30M55 120H30"/>
+        <path d="M145 80h25M145 100h25M145 120h25"/>
+      </g>
+      <text class="kw" x="100" y="101">GPU</text>
+    </svg>
+  </div>
+
+  <!-- biến thể icon-keyword: chữ ngắn ≤ 4 ký tự, có thể tô đỏ một ký tự bằng <b> -->
+  <div class="keyword">K8s</div>
+
+  <div class="safe"></div>
+</div>
+</body>
+</html>

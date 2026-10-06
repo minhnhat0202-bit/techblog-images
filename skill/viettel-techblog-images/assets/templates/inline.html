@@ -1,0 +1,100 @@
+<!doctype html>
+<!--
+  Template ẢNH TRONG BÀI Tech Blog Viettel Cloud · rộng 1688 (2× cột nội dung 844)
+  Chiều cao: class trên <body>:  h-16x9 (950) · h-3x2 (1126) · h-2x1 (844) · h-4x3 (1266) · hoặc đặt --h tùy ý
+  Render:  python3 scripts/render.py fig01.html --preset inline-16x9 --out techblog-<slug>-fig01.png
+  Một hình = một ý. ≤ 7 node, ≤ 3 từ/nhãn, chữ ≥ 36px, đúng một node .hl (đỏ).
+  Thêm class "raised" vào <body> để node thành khối nổi nhẹ (đi cùng thumbnail isometric) — mặc định từ 06/10/2026.
+-->
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<title>inline</title>
+<style>
+  :root{--bg:#FFFFFF;--ink:#44494D;--ink-soft:#B5B4B4;--hair:#DADBDD;--soft:#F2F2F2;--soft2:#F8F8F9;--red:#EE0033;--red-tint:#FFD9E0;
+        --w:1688px;--h:950px;--pad:96px;}
+  body.h-16x9{--h:950px} body.h-3x2{--h:1126px} body.h-2x1{--h:844px} body.h-4x3{--h:1266px}
+  html,body{margin:0;padding:0;width:var(--w);height:var(--h);overflow:hidden;background:var(--bg);
+    font-family:"FS PF BeauSans Pro",Roboto,Arial,sans-serif;color:var(--ink);font-size:36px;line-height:1.25;}
+  .stage{position:relative;box-sizing:border-box;width:var(--w);height:var(--h);padding:var(--pad);display:flex;flex-direction:column;}
+  .kicker{position:absolute;left:var(--pad);top:64px;font-size:28px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
+  .kicker::before{content:"";display:inline-block;width:14px;height:14px;background:var(--red);margin-right:16px;vertical-align:1px}
+  .canvas{flex:1;display:flex;align-items:center;justify-content:center;}
+  .caption{position:absolute;left:var(--pad);right:var(--pad);bottom:56px;font-size:30px;color:var(--ink-soft);}
+
+  /* layout helpers */
+  .row{display:flex;align-items:center;gap:40px}
+  .col{display:flex;flex-direction:column;align-items:center;gap:32px}
+  .grow{flex:1}
+
+  /* nodes */
+  .node{box-sizing:border-box;min-width:260px;padding:30px 40px;border:3px solid var(--ink);border-radius:12px;background:#fff;
+        text-align:center;font-weight:500;font-size:38px;line-height:1.2}
+  .node small{display:block;font-size:28px;font-weight:400;color:var(--ink-soft);margin-top:8px}
+  .node.soft{border-color:transparent;background:var(--soft)}
+  .node.hl{border-color:var(--red);background:var(--red);color:#fff}
+  .node.hl small{color:#fff;opacity:.85}
+  .node.dashed{border-style:dashed;border-color:var(--ink-soft);color:var(--ink-soft)}
+  .node.icon svg{width:64px;height:64px;display:block;margin:0 auto 12px;stroke:currentColor;fill:none;stroke-width:7;stroke-linecap:round;stroke-linejoin:round}
+  .node.icon .acc{stroke:var(--red)} .node.hl.icon .acc{stroke:#fff}
+
+  /* group frame */
+  .group{position:relative;box-sizing:border-box;border:3px dashed var(--hair);border-radius:16px;padding:72px 48px 48px;}
+  .group > .title{position:absolute;left:40px;top:22px;font-size:26px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft);font-weight:500}
+
+  /* arrows: dùng <svg class="arrow"> hoặc <span class="arrow-h"> */
+  .arrow-h{flex:none;width:120px;height:4px;background:var(--ink-soft);position:relative}
+  .arrow-h::after{content:"";position:absolute;right:-2px;top:-10px;border:12px solid transparent;border-left:16px solid var(--ink-soft);border-right:0}
+  .arrow-h.red{background:var(--red)} .arrow-h.red::after{border-left-color:var(--red)}
+  .arrow-v{flex:none;width:4px;height:80px;background:var(--ink-soft);position:relative;margin:0 auto}
+  .arrow-v::after{content:"";position:absolute;bottom:-2px;left:-10px;border:12px solid transparent;border-top:16px solid var(--ink-soft);border-bottom:0}
+  .arrow-v.red{background:var(--red)} .arrow-v.red::after{border-top-color:var(--red)}
+
+  /* steps & compare */
+  .step{font-weight:700;color:var(--red);font-size:44px;letter-spacing:-.02em}
+  .compare{display:grid;grid-template-columns:1fr 3px 1fr;gap:0 72px;width:100%}
+  .compare .vline{background:var(--hair)}
+  .compare h3{margin:0 0 32px;font-size:28px;letter-spacing:.08em;text-transform:uppercase;font-weight:500;color:var(--ink)}
+  .compare h3.rec::before{content:"";display:block;width:56px;height:5px;background:var(--red);margin-bottom:16px}
+  .compare ul{margin:0;padding:0;list-style:none;font-size:34px;line-height:1.5}
+  .compare li::before{content:"–";color:var(--ink-soft);margin-right:16px}
+  .hair{height:3px;background:var(--hair);width:100%}
+
+  /* ---- Biến thể RAISED (thêm class "raised" vào <body>): node thành khối nổi nhẹ cùng tông với thumbnail isometric.
+     Bố cục, mũi tên, nhãn vẫn phẳng để đọc được; chỉ đổi bề mặt node và nền. ---- */
+  body.raised .stage{background:radial-gradient(ellipse 80% 80% at 50% 45%,#FFFFFF 0%,#FFFFFF 45%,#F3F3F4 100%)}
+  body.raised .node{border:none;background:linear-gradient(180deg,#FFFFFF 0%,#F2F2F3 100%);
+      box-shadow:0 7px 0 #CFD0D2, 0 20px 28px -8px rgba(68,73,77,.22); color:var(--ink)}
+  body.raised .node.soft{background:linear-gradient(180deg,#F2F2F2 0%,#E3E4E6 100%);box-shadow:0 7px 0 #BFC0C2, 0 20px 28px -8px rgba(68,73,77,.18)}
+  body.raised .node.hl{background:linear-gradient(180deg,#FF4D70 0%,#EE0033 100%);box-shadow:0 7px 0 #A80026, 0 22px 30px -8px rgba(238,0,51,.35);color:#fff}
+  body.raised .node.dashed{background:transparent;box-shadow:none;border:3px dashed var(--ink-soft)}
+  body.raised .node.mono,body.raised .node .mono{font-weight:500}
+  body.raised .group{background:rgba(255,255,255,.55)}
+  body.raised .group.red{border-color:var(--red);box-shadow:inset 0 0 0 1px rgba(238,0,51,.15)}
+  body.raised .bar{border:none;background:#E6E7E9;box-shadow:inset 0 2px 3px rgba(68,73,77,.18)}
+  body.raised .bar i{background:linear-gradient(180deg,#6B7075,#44494D)}
+  body.raised .arrow-h,body.raised .arrow-v{box-shadow:0 2px 0 rgba(255,255,255,.8)}
+  .safe{display:none}
+</style>
+</head>
+<body class="h-16x9 raised">  <!-- EDIT: h-16x9 | h-3x2 | h-2x1 | h-4x3  (+ raised = khối nổi nhẹ, bỏ nếu muốn phẳng hẳn) -->
+<div class="stage">
+  <div class="kicker">Hình 1 · Luồng request</div>   <!-- EDIT hoặc xóa -->
+
+  <div class="canvas">
+    <!-- EDIT: ví dụ pipeline 4 node, node thứ 3 là chủ đề (đỏ) -->
+    <div class="row">
+      <div class="node soft">Client</div>
+      <span class="arrow-h"></span>
+      <div class="node">API Gateway<small>TLS, auth</small></div>
+      <span class="arrow-h red"></span>
+      <div class="node hl">Router<small>KV-aware</small></div>
+      <span class="arrow-h"></span>
+      <div class="node">Workers<small>vLLM · SGLang</small></div>
+    </div>
+  </div>
+
+  <div class="caption">Router chọn replica theo KV cache đang có, không theo round-robin.</div>  <!-- EDIT hoặc xóa -->
+</div>
+</body>
+</html>
